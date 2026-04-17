@@ -1,0 +1,29 @@
+.bardic-music-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bardic-music-controls button {
+  flex: 1 1 auto;
+}
+
+.bardic-music-form .form-group.stacked {
+  align-items: flex-start;
+}
+
+.bardic-music-form .form-fields {
+  gap: 0.5rem;
+}
+
+.bardic-music-form .range-value {
+  min-width: 3rem;
+  text-align: right;
+  opacity: 0.8;
+}
+
+.bardic-music-form .hint {
+  margin-top: 0.25rem;
+}
