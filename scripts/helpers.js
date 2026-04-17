@@ -18,7 +18,7 @@ export function ensureLocalization() {
   }
 
   if ( Object.keys(missing).length ) {
-    foundry.utils.mergeObject(game.i18n.translations, missing, { inplace: true, insertKeys: true });
+    foundry.utils.mergeObject(game.i18n.translations, foundry.utils.expandObject(missing), { inplace: true, insertKeys: true });
   }
 }
 
