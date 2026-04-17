@@ -19,6 +19,8 @@ Hooks.once("init", () => {
   }
 
   Hooks.on("getApplicationHeaderButtons", onGetApplicationHeaderButtons);
+  Hooks.on("renderItemSheet", onRenderItemSheet);
+  Hooks.on("renderItemSheet5e2", onRenderItemSheet);
   Hooks.on("renderChatMessage", onRenderChatMessage);
   Hooks.on("createChatMessage", onCreateChatMessage);
 
@@ -55,6 +57,44 @@ function onGetApplicationHeaderButtons(app, buttons) {
     icon: "fas fa-sliders-h",
     onclick: () => openItemConfig(item)
   });
+}
+
+function onRenderItemSheet(app, html) {
+  const item = app?.object instanceof Item ? app.object : app?.document instanceof Item ? app.document : null;
+  if ( !isSupportedItem(item) ) return;
+
+  const header = app.element?.find?.(".window-header");
+  if ( !header?.length ) return;
+
+  header.find(".bardic-music-header-control").remove();
+
+  const configButton = $(`
+    <a class="header-button bardic-music-header-control bardic-music-config-button">
+      <i class="fas fa-sliders-h"></i>${game.i18n.localize("BARDSONG.Configure")}
+    </a>
+  `);
+  const toggleButton = $(`
+    <a class="header-button bardic-music-header-control bardic-music-toggle-button">
+      <i class="fas fa-music"></i>${game.i18n.localize("BARDSONG.Toggle")}
+    </a>
+  `);
+
+  configButton.on("click", (event) => {
+    event.preventDefault();
+    openItemConfig(item);
+  });
+  toggleButton.on("click", (event) => {
+    event.preventDefault();
+    requestPlayback(item, "toggle");
+  });
+
+  const closeButton = header.find(".close");
+  if ( closeButton.length ) {
+    closeButton.before(toggleButton);
+    closeButton.before(configButton);
+  } else {
+    header.append(configButton, toggleButton);
+  }
 }
 
 function openItemConfig(item) {
