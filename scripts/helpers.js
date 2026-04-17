@@ -1,4 +1,4 @@
-import { DEFAULT_ITEM_CONFIG, FLAG_KEY, MODULE_ID } from "./constants.js";
+import { DEFAULT_ITEM_CONFIG, FALLBACK_LOCALIZATION, FLAG_KEY, MODULE_ID } from "./constants.js";
 
 export function getItemMusicConfig(item) {
   const stored = item?.getFlag(MODULE_ID, FLAG_KEY) ?? {};
@@ -6,6 +6,28 @@ export function getItemMusicConfig(item) {
   merged.volume = normalizeVolume(merged.volume);
   merged.fade = normalizeFade(merged.fade);
   return merged;
+}
+
+export function ensureLocalization() {
+  const lang = game.i18n?.lang === "ko" ? "ko" : "en";
+  const fallback = FALLBACK_LOCALIZATION[lang] ?? FALLBACK_LOCALIZATION.en;
+  const missing = {};
+
+  for ( const [key, value] of Object.entries(fallback) ) {
+    if ( !game.i18n?.has?.(key) ) missing[key] = value;
+  }
+
+  if ( Object.keys(missing).length ) {
+    foundry.utils.mergeObject(game.i18n.translations, missing, { inplace: true, insertKeys: true });
+  }
+}
+
+export function localize(key) {
+  const translated = game.i18n?.localize?.(key) ?? key;
+  if ( translated !== key ) return translated;
+
+  const lang = game.i18n?.lang === "ko" ? "ko" : "en";
+  return FALLBACK_LOCALIZATION[lang]?.[key] ?? FALLBACK_LOCALIZATION.en[key] ?? key;
 }
 
 export function isMusicConfigured(item) {

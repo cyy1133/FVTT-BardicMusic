@@ -1,5 +1,5 @@
 import { FLAG_KEY, MODULE_ID } from "./constants.js";
-import { getItemMusicConfig, normalizeConfigData } from "./helpers.js";
+import { getItemMusicConfig, localize, normalizeConfigData } from "./helpers.js";
 
 export class BardicMusicItemConfigForm extends FormApplication {
   constructor(item, options = {}) {
@@ -25,17 +25,17 @@ export class BardicMusicItemConfigForm extends FormApplication {
       config,
       volumeLabel: `${Math.round(config.volume * 100)}%`,
       triggerOptions: {
-        manual: game.i18n.localize("BARDSONG.Config.Trigger.manual"),
-        "item-use": game.i18n.localize("BARDSONG.Config.Trigger.item-use")
+        manual: localize("BARDSONG.Config.Trigger.manual"),
+        "item-use": localize("BARDSONG.Config.Trigger.item-use")
       },
       behaviorOptions: {
-        toggle: game.i18n.localize("BARDSONG.Config.Behavior.toggle"),
-        play: game.i18n.localize("BARDSONG.Config.Behavior.play"),
-        stop: game.i18n.localize("BARDSONG.Config.Behavior.stop")
+        toggle: localize("BARDSONG.Config.Behavior.toggle"),
+        play: localize("BARDSONG.Config.Behavior.play"),
+        stop: localize("BARDSONG.Config.Behavior.stop")
       },
       audienceOptions: {
-        all: game.i18n.localize("BARDSONG.Config.Audience.all"),
-        self: game.i18n.localize("BARDSONG.Config.Audience.self")
+        all: localize("BARDSONG.Config.Audience.all"),
+        self: localize("BARDSONG.Config.Audience.self")
       },
       channelOptions: {
         music: game.i18n.localize(CONST.AUDIO_CHANNELS.music),
@@ -72,13 +72,13 @@ export class BardicMusicItemConfigForm extends FormApplication {
     const formData = new FormDataExtended(this.form).object;
     const config = normalizeConfigData(formData);
     await this.item.setFlag(MODULE_ID, FLAG_KEY, config);
-    ui.notifications.info(game.i18n.localize("BARDSONG.Notify.Saved"));
+    ui.notifications.info(localize("BARDSONG.Notify.Saved"));
     await game.modules.get(MODULE_ID)?.api?.playItem(this.item, { forceAudience: "self" });
   }
 
   async _updateObject(_event, formData) {
     const config = normalizeConfigData(formData);
     await this.item.setFlag(MODULE_ID, FLAG_KEY, config);
-    ui.notifications.info(game.i18n.localize("BARDSONG.Notify.Saved"));
+    ui.notifications.info(localize("BARDSONG.Notify.Saved"));
   }
 }

@@ -1,11 +1,13 @@
 import { FLAG_KEY, MODULE_ID, SOCKET_ACTIONS } from "./constants.js";
 import {
   canRenderControls,
+  ensureLocalization,
   getItemMusicConfig,
   getMessageItemUuid,
   getPlaybackId,
   isMusicConfigured,
   isSupportedItem,
+  localize,
   normalizeConfigData,
   resolveItem
 } from "./helpers.js";
@@ -14,6 +16,7 @@ import { BardicMusicItemConfigForm } from "./item-config-form.js";
 const activeSounds = new Map();
 
 Hooks.once("init", () => {
+  ensureLocalization();
   if ( game.system?.id !== "dnd5e" ) {
     console.warn(`${MODULE_ID} | This module is intended for dnd5e worlds.`);
   }
@@ -45,14 +48,14 @@ function onGetApplicationHeaderButtons(app, buttons) {
   if ( !isSupportedItem(item) ) return;
 
   buttons.unshift({
-    label: game.i18n.localize("BARDSONG.Toggle"),
+    label: localize("BARDSONG.Toggle"),
     class: "bardic-music-toggle",
     icon: "fas fa-music",
     onclick: () => requestPlayback(item, "toggle")
   });
 
   buttons.unshift({
-    label: game.i18n.localize("BARDSONG.Configure"),
+    label: localize("BARDSONG.Configure"),
     class: "bardic-music-config",
     icon: "fas fa-sliders-h",
     onclick: () => openItemConfig(item)
@@ -70,12 +73,12 @@ function onRenderItemSheet(app, html) {
 
   const configButton = $(`
     <a class="header-button bardic-music-header-control bardic-music-config-button">
-      <i class="fas fa-sliders-h"></i>${game.i18n.localize("BARDSONG.Configure")}
+      <i class="fas fa-sliders-h"></i>${localize("BARDSONG.Configure")}
     </a>
   `);
   const toggleButton = $(`
     <a class="header-button bardic-music-header-control bardic-music-toggle-button">
-      <i class="fas fa-music"></i>${game.i18n.localize("BARDSONG.Toggle")}
+      <i class="fas fa-music"></i>${localize("BARDSONG.Toggle")}
     </a>
   `);
 
@@ -99,7 +102,7 @@ function onRenderItemSheet(app, html) {
 
 function openItemConfig(item) {
   if ( !isSupportedItem(item) ) {
-    ui.notifications.warn(game.i18n.localize("BARDSONG.Notify.InvalidItem"));
+    ui.notifications.warn(localize("BARDSONG.Notify.InvalidItem"));
     return;
   }
 
@@ -120,10 +123,10 @@ async function appendChatControls(message, html, itemUuid) {
   const controls = $(`
     <div class="bardic-music-controls">
       <button type="button" class="bardic-music-chat-play">
-        <i class="fas fa-play"></i> ${game.i18n.localize("BARDSONG.Play")}
+        <i class="fas fa-play"></i> ${localize("BARDSONG.Play")}
       </button>
       <button type="button" class="bardic-music-chat-stop">
-        <i class="fas fa-stop"></i> ${game.i18n.localize("BARDSONG.Stop")}
+        <i class="fas fa-stop"></i> ${localize("BARDSONG.Stop")}
       </button>
     </div>
   `);
@@ -161,7 +164,7 @@ async function requestPlayback(itemOrUuid, requestedAction = "toggle", options =
   const action = resolveAction(requestedAction, playbackId);
 
   if ( !config.src && action !== SOCKET_ACTIONS.STOP ) {
-    ui.notifications.warn(game.i18n.localize("BARDSONG.Notify.MissingSource"));
+    ui.notifications.warn(localize("BARDSONG.Notify.MissingSource"));
     return false;
   }
 
