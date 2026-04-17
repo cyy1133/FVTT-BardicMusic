@@ -15,7 +15,7 @@ export class BardicMusicItemConfigForm extends FormApplication {
       width: 540,
       closeOnSubmit: true,
       submitOnClose: false,
-      title: game.i18n.localize("BARDSONG.Configure")
+      title: localize("BARDSONG.Configure")
     });
   }
 

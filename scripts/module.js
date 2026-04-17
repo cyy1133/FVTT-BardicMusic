@@ -16,7 +16,6 @@ import { BardicMusicItemConfigForm } from "./item-config-form.js";
 const activeSounds = new Map();
 
 Hooks.once("init", () => {
-  ensureLocalization();
   if ( game.system?.id !== "dnd5e" ) {
     console.warn(`${MODULE_ID} | This module is intended for dnd5e worlds.`);
   }
@@ -40,6 +39,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
+  ensureLocalization();
   game.socket?.on(`module.${MODULE_ID}`, onSocketMessage);
 });
 
