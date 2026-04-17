@@ -14,8 +14,13 @@ import {
 import { BardicMusicItemConfigForm } from "./item-config-form.js";
 
 const activeSounds = new Map();
+let initRegistered = false;
+let readyRegistered = false;
 
-Hooks.once("init", () => {
+function registerModuleInit() {
+  if ( initRegistered ) return;
+  initRegistered = true;
+
   if ( game.system?.id !== "dnd5e" ) {
     console.warn(`${MODULE_ID} | This module is intended for dnd5e worlds.`);
   }
@@ -36,12 +41,21 @@ Hooks.once("init", () => {
       activeSounds
     };
   }
-});
+}
 
-Hooks.once("ready", () => {
+function registerModuleReady() {
+  if ( readyRegistered ) return;
+  readyRegistered = true;
+
   ensureLocalization();
   game.socket?.on(`module.${MODULE_ID}`, onSocketMessage);
-});
+}
+
+Hooks.once("init", registerModuleInit);
+Hooks.once("ready", registerModuleReady);
+
+if ( globalThis.game?.modules ) registerModuleInit();
+if ( globalThis.game?.ready ) registerModuleReady();
 
 function onGetApplicationHeaderButtons(app, buttons) {
   const item = app?.object instanceof Item ? app.object : app?.document instanceof Item ? app.document : null;
