@@ -65,14 +65,14 @@ function onGetApplicationHeaderButtons(app, buttons) {
   buttons.unshift({
     label: localize("BARDSONG.Toggle"),
     class: "bardic-music-toggle",
-    icon: "fas fa-music",
+    icon: "fas fa-play-circle",
     onclick: () => requestPlayback(item, "toggle")
   });
 
   buttons.unshift({
     label: localize("BARDSONG.Configure"),
     class: "bardic-music-config",
-    icon: "fas fa-sliders-h",
+    icon: "fas fa-music",
     onclick: () => openItemConfig(item)
   });
 }
@@ -87,13 +87,13 @@ function onRenderItemSheet(app) {
   header.find(".bardic-music-header-control").remove();
 
   const configButton = $(`
-    <a class="header-button bardic-music-header-control bardic-music-config-button">
-      <i class="fas fa-sliders-h"></i>${localize("BARDSONG.Configure")}
+    <a class="header-button bardic-music-header-control bardic-music-config-button" title="${localize("BARDSONG.Configure")}">
+      <i class="fas fa-music"></i>${localize("BARDSONG.Configure")}
     </a>
   `);
   const toggleButton = $(`
-    <a class="header-button bardic-music-header-control bardic-music-toggle-button">
-      <i class="fas fa-music"></i>${localize("BARDSONG.Toggle")}
+    <a class="header-button bardic-music-header-control bardic-music-toggle-button" title="${localize("BARDSONG.Toggle")}">
+      <i class="fas fa-play-circle"></i>${localize("BARDSONG.Toggle")}
     </a>
   `);
 
