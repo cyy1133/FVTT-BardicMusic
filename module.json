@@ -1,8 +1,8 @@
 {
   "id": "fvtt-bardic-music",
   "title": "Bardic Music",
-  "description": "Attach music to any dnd5e item or feature and play, stop, or auto-trigger it when the item is used.",
-  "version": "0.1.5",
+  "description": "Attach music to any dnd5e item or feature and route it through shared Foundry playlists when the item is used.",
+  "version": "0.2.0",
   "authors": [
     {
       "name": "cyy1133"
@@ -37,7 +37,7 @@
   "socket": true,
   "url": "https://github.com/cyy1133/FVTT-BardicMusic",
   "manifest": "https://raw.githubusercontent.com/cyy1133/FVTT-BardicMusic/main/module.json",
-  "download": "https://github.com/cyy1133/FVTT-BardicMusic/releases/download/v0.1.5/fvtt-bardic-music-v0.1.5.zip",
+  "download": "https://github.com/cyy1133/FVTT-BardicMusic/releases/download/v0.2.0/fvtt-bardic-music-v0.2.0.zip",
   "readme": "https://raw.githubusercontent.com/cyy1133/FVTT-BardicMusic/main/README.md",
   "license": "https://raw.githubusercontent.com/cyy1133/FVTT-BardicMusic/main/LICENSE",
   "bugs": "https://github.com/cyy1133/FVTT-BardicMusic/issues"

@@ -1,10 +1,14 @@
-import { DEFAULT_ITEM_CONFIG, FALLBACK_LOCALIZATION, FLAG_KEY, MODULE_ID } from "./constants.js";
+import { DEFAULT_ITEM_CONFIG, FALLBACK_LOCALIZATION, FLAG_KEY, MODULE_ID, PLAYLIST_TYPES } from "./constants.js";
 
 export function getItemMusicConfig(item) {
   const stored = item?.getFlag(MODULE_ID, FLAG_KEY) ?? {};
   const merged = foundry.utils.mergeObject(DEFAULT_ITEM_CONFIG, stored, { inplace: false, recursive: true });
+  merged.src = String(merged.src ?? "").trim();
   merged.volume = normalizeVolume(merged.volume);
   merged.fade = normalizeFade(merged.fade);
+  merged.category = normalizeCategory(merged.category);
+  merged.enabled = Boolean(merged.enabled);
+  merged.loop = Boolean(merged.loop);
   return merged;
 }
 
@@ -32,11 +36,7 @@ export function localize(key) {
 
 export function isMusicConfigured(item) {
   const config = getItemMusicConfig(item);
-  return Boolean(config.enabled && String(config.src ?? "").trim());
-}
-
-export function getPlaybackId(itemUuid) {
-  return `item:${itemUuid}`;
+  return Boolean(config.enabled && config.src);
 }
 
 export function getMessageItemUuid(message) {
@@ -55,6 +55,7 @@ export function normalizeConfigData(formData) {
   data.src = String(data.src ?? "").trim();
   data.volume = normalizeVolume(data.volume);
   data.fade = normalizeFade(data.fade);
+  data.category = normalizeCategory(data.category);
   return data;
 }
 
@@ -68,6 +69,10 @@ export function normalizeFade(value) {
   const numeric = Number(value);
   if ( Number.isNaN(numeric) ) return DEFAULT_ITEM_CONFIG.fade;
   return Math.max(0, Math.round(numeric));
+}
+
+export function normalizeCategory(value) {
+  return value === PLAYLIST_TYPES.SFX ? PLAYLIST_TYPES.SFX : PLAYLIST_TYPES.SKILL;
 }
 
 export async function resolveItem(uuid) {

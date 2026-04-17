@@ -1,4 +1,4 @@
-import { FLAG_KEY, MODULE_ID } from "./constants.js";
+import { FLAG_KEY, MODULE_ID, PLAYLIST_TYPES } from "./constants.js";
 import { getItemMusicConfig, localize, normalizeConfigData } from "./helpers.js";
 
 export class BardicMusicItemConfigForm extends FormApplication {
@@ -21,8 +21,25 @@ export class BardicMusicItemConfigForm extends FormApplication {
 
   getData() {
     const config = getItemMusicConfig(this.item);
+
     return {
       config,
+      labels: {
+        enable: localize("BARDSONG.Config.Enable"),
+        source: localize("BARDSONG.Config.Source"),
+        sourceHint: localize("BARDSONG.Config.SourceHint"),
+        trigger: localize("BARDSONG.Config.Trigger"),
+        behavior: localize("BARDSONG.Config.Behavior"),
+        category: localize("BARDSONG.Config.Category"),
+        volume: localize("BARDSONG.Config.Volume"),
+        volumeHint: localize("BARDSONG.Config.VolumeHint"),
+        loop: localize("BARDSONG.Config.Loop"),
+        fade: localize("BARDSONG.Config.Fade"),
+        preview: localize("BARDSONG.Config.Preview"),
+        previewHint: localize("BARDSONG.Config.PreviewHint"),
+        picker: localize("BARDSONG.Config.Picker"),
+        save: game.i18n?.localize?.("Save Changes") ?? "Save Changes"
+      },
       volumeLabel: `${Math.round(config.volume * 100)}%`,
       triggerOptions: {
         manual: localize("BARDSONG.Config.Trigger.manual"),
@@ -33,14 +50,9 @@ export class BardicMusicItemConfigForm extends FormApplication {
         play: localize("BARDSONG.Config.Behavior.play"),
         stop: localize("BARDSONG.Config.Behavior.stop")
       },
-      audienceOptions: {
-        all: localize("BARDSONG.Config.Audience.all"),
-        self: localize("BARDSONG.Config.Audience.self")
-      },
-      channelOptions: {
-        music: game.i18n.localize(CONST.AUDIO_CHANNELS.music),
-        interface: game.i18n.localize(CONST.AUDIO_CHANNELS.interface),
-        environment: game.i18n.localize(CONST.AUDIO_CHANNELS.environment)
+      categoryOptions: {
+        [PLAYLIST_TYPES.SKILL]: localize("BARDSONG.Config.Category.skill"),
+        [PLAYLIST_TYPES.SFX]: localize("BARDSONG.Config.Category.sfx")
       }
     };
   }
@@ -72,13 +84,15 @@ export class BardicMusicItemConfigForm extends FormApplication {
     const formData = new FormDataExtended(this.form).object;
     const config = normalizeConfigData(formData);
     await this.item.setFlag(MODULE_ID, FLAG_KEY, config);
+    await game.modules.get(MODULE_ID)?.api?.syncItem(this.item, { config, applyVolume: true });
     ui.notifications.info(localize("BARDSONG.Notify.Saved"));
-    await game.modules.get(MODULE_ID)?.api?.playItem(this.item, { forceAudience: "self" });
+    await game.modules.get(MODULE_ID)?.api?.previewItem(this.item, { config });
   }
 
   async _updateObject(_event, formData) {
     const config = normalizeConfigData(formData);
     await this.item.setFlag(MODULE_ID, FLAG_KEY, config);
+    await game.modules.get(MODULE_ID)?.api?.syncItem(this.item, { config, applyVolume: true });
     ui.notifications.info(localize("BARDSONG.Notify.Saved"));
   }
 }
